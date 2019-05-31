@@ -1,0 +1,16 @@
+{% block subject %}Welcome to ErosNow Test{% endblock %}
+
+{% block plain %}Hi {{name}},
+This is an example email.
+
+Thanks,
+- ErosNowTeam Team
+{% endblock %}
+
+{% block html %}<html><body>
+<p>Hi {{name}},</p>
+<p>This is an example email.</p>
+<p>Thanks,</p>
+<p>The ErosNow Team</p>
+</body></html>
+{% endblock %}

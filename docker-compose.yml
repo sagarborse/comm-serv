@@ -1,0 +1,61 @@
+version: '3.5'
+services:
+  comm-service:
+    build: .
+    restart: always
+    command: bash -c "/bin/bash start.sh"
+    container_name: commservice
+    volumes:
+      - .:/commservice
+    ports:
+      - "5000:80"
+    networks:
+      - web-db-net
+    env_file:
+      - .env
+
+  worker:
+    image: worker
+    build: .
+    restart: always
+    command: bash -c "/bin/bash celerystart.sh"
+    container_name: worker
+    volumes:
+      - .:/commservice
+    networks:
+      - web-db-net
+    depends_on:
+      - comm-service
+    env_file:
+      - .env
+
+  celery-flower:
+    image: jcalazan/django
+    build: .
+    ports:
+      - "5555:5555"
+    volumes:
+      - .:/commservice
+    expose:
+      - 5555
+    command: bash -c  "/bin/bash flowerstart.sh"
+    depends_on:
+      - worker
+    networks:
+      - web-db-net
+    env_file:
+      - .env
+
+
+
+
+
+# volumes:
+#   mounted_data:
+
+
+
+
+networks:
+    web-db-net:   
+      name: "web_db_net"
